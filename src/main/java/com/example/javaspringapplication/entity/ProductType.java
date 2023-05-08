@@ -1,10 +1,9 @@
-package com.example.javaspringapplication.dto;
+package com.example.javaspringapplication.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Set;
 
 @Data
 @Table(name = "product_type")
