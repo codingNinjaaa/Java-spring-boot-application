@@ -1,10 +1,8 @@
 package com.example.javaspringapplication.service;
 
-import com.example.javaspringapplication.dto.ProductReturn;
-import com.example.javaspringapplication.dto.ProductSaveRequest;
+import com.example.javaspringapplication.dto.*;
 import com.example.javaspringapplication.entity.Product;
 import com.example.javaspringapplication.entity.ProductType;
-import com.example.javaspringapplication.dto.ProductTypeReturn;
 import com.example.javaspringapplication.repository.ProductRepository;
 import com.example.javaspringapplication.repository.ProductTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,5 +47,19 @@ public class ProductService {
     public void saveProduct(ProductSaveRequest request) {
         Product product = new Product(String.valueOf(UUID.randomUUID()), request.getName(), request.getQuantity(), request.getPrice(), request.getProductTypeId());
         productRepository.save(product);
+    }
+
+    public void saveProductType(ProductTypeSaveRequest request) {
+        ProductType productType = new ProductType(String.valueOf(UUID.randomUUID()), request.getProductTypeDescription().getBytes(StandardCharsets.UTF_8));
+        productTypeRepository.save(productType);
+    }
+
+
+    public List<Product> findProductByName(ProductByNameRequest request) {
+        return productRepository.findByName(request.getName());
+    }
+
+    public List<Product> findProductByPrice(float minPrice, float maxPrice) {
+        return productRepository.findProductsByPrice(minPrice, maxPrice);
     }
 }

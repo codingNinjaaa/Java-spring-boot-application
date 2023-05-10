@@ -1,9 +1,6 @@
 package com.example.javaspringapplication.controller;
 
-import com.example.javaspringapplication.dto.HeartbeatDto;
-import com.example.javaspringapplication.dto.ProductReturn;
-import com.example.javaspringapplication.dto.ProductSaveRequest;
-import com.example.javaspringapplication.dto.ProductTypeReturn;
+import com.example.javaspringapplication.dto.*;
 import com.example.javaspringapplication.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +45,21 @@ public class ProductController {
     public ResponseEntity saveProduct(@RequestBody ProductSaveRequest request){
         productService.saveProduct(request);
         return new ResponseEntity(HttpStatusCode.valueOf(201));
+    }
+
+    @PostMapping("/product-type")
+    public ResponseEntity saveProductType(@RequestBody ProductTypeSaveRequest request){
+        productService.saveProductType(request);
+        return new ResponseEntity(HttpStatusCode.valueOf(200));
+    }
+
+    @PostMapping("/product-name")
+    public ResponseEntity findProductByName(@RequestBody ProductByNameRequest request){
+        return new ResponseEntity(productService.findProductByName(request), HttpStatusCode.valueOf(200));
+    }
+
+    @GetMapping("/product/{minPrice}/{maxPrice}")
+    public ResponseEntity findProductByPrice(@PathVariable float minPrice, @PathVariable float maxPrice){
+        return new ResponseEntity(productService.findProductByPrice(minPrice, maxPrice), HttpStatusCode.valueOf(200));
     }
 }
