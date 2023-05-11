@@ -3,6 +3,7 @@ package com.example.javaspringapplication.service;
 import com.example.javaspringapplication.dto.*;
 import com.example.javaspringapplication.entity.Product;
 import com.example.javaspringapplication.entity.ProductType;
+import com.example.javaspringapplication.exception.BadRequestException;
 import com.example.javaspringapplication.repository.ProductRepository;
 import com.example.javaspringapplication.repository.ProductTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,9 @@ public class ProductService {
         return null;
     }
 
-    public void saveProduct(ProductSaveRequest request) {
+    public void saveProduct(ProductSaveRequest request) throws BadRequestException {
+        if(request.getName() == null || request.getName().length()==0)
+            throw new BadRequestException("Product Name not present");
         Product product = new Product(String.valueOf(UUID.randomUUID()), request.getName(), request.getQuantity(), request.getPrice(), request.getProductTypeId());
         productRepository.save(product);
     }

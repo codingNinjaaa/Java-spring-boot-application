@@ -1,6 +1,7 @@
 package com.example.javaspringapplication.controller;
 
 import com.example.javaspringapplication.dto.*;
+import com.example.javaspringapplication.entity.Product;
 import com.example.javaspringapplication.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -43,8 +45,13 @@ public class ProductController {
 
     @PostMapping("/product")
     public ResponseEntity saveProduct(@RequestBody ProductSaveRequest request){
-        productService.saveProduct(request);
-        return new ResponseEntity(HttpStatusCode.valueOf(201));
+        try {
+            productService.saveProduct(request);
+            return new ResponseEntity(HttpStatusCode.valueOf(201));
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity(HttpStatusCode.valueOf(400));
+        }
     }
 
     @PostMapping("/product-type")
@@ -55,7 +62,12 @@ public class ProductController {
 
     @PostMapping("/product-name")
     public ResponseEntity findProductByName(@RequestBody ProductByNameRequest request){
-        return new ResponseEntity(productService.findProductByName(request), HttpStatusCode.valueOf(200));
+        List<Product> listProduct = productService.findProductByName(request);
+        if(listProduct == null || listProduct.size() == 0){
+            log.info("No products found");
+            return new ResponseEntity(HttpStatusCode.valueOf(204));
+        }
+        return new ResponseEntity(listProduct, HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("/product/{minPrice}/{maxPrice}")
